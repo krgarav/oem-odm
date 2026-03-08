@@ -4,7 +4,11 @@ const contactDetails = [
   {
     icon: MapPin,
     title: "Visit Us",
-    lines: ["123 Beauty Boulevard", "Suite 500", "Los Angeles, CA 90001"],
+    lines: [
+      "Glowgavin overseas pvt. Ltd",
+      "G1-218 growth Centre Ext. Riico industrial area dholpur rajasthan",
+      "( 328001 ) India",
+    ],
   },
   {
     icon: Phone,
