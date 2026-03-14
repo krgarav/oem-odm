@@ -62,14 +62,19 @@ const products = [
   },
 ]
 
-export function ProductsGrid() {
+export function ProductsGrid({ category }: { category: string }) {
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null)
-
+  const filteredProducts =
+    category === "all"
+      ? products
+      : products.filter(
+        (product) => product.category.toLowerCase() === category
+      )
   return (
     <>
       <div className="mb-6 flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Showing {products.length} products
+          Showing {filteredProducts.length} products
         </p>
         <select className="rounded-none border border-border bg-background px-4 py-2 text-sm focus:border-primary focus:outline-none">
           <option>Sort by: Featured</option>
@@ -80,7 +85,7 @@ export function ProductsGrid() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <div
             key={product.id}
             className="group cursor-pointer"
