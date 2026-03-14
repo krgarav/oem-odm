@@ -52,27 +52,31 @@ export function AboutOfferings() {
   ]
 
   return (
-    <section ref={sectionRef} className="relative py-24 lg:py-32 bg-white">
+    <section ref={sectionRef} className="bg-secondary py-20">
       <div className="mx-auto max-w-7xl px-4">
-        <div ref={cardsRef} className="grid gap-12 lg:gap-16">
+        <div className="mb-16">
+          <p className="text-sm uppercase tracking-[0.3em] text-primary">Our Services</p>
+          <h2 className="mt-4 font-serif text-4xl font-bold text-secondary-foreground md:text-5xl">
+            <span className="text-balance">What We Offer</span>
+          </h2>
+        </div>
+
+        <div ref={cardsRef} className="grid gap-12 md:grid-cols-3">
           {offerings.map((offering, index) => (
             <div
               key={index}
-              className="group relative border-b border-orange-200/40 pb-12 last:border-b-0 last:pb-0 lg:pb-16 lg:last:pb-0"
+              className="group flex flex-col gap-4"
             >
-              <h3 className="font-serif text-3xl md:text-4xl font-bold text-amber-700 mb-6 tracking-tight">
+              <h3 className="font-serif text-xl font-bold text-foreground">
                 {offering.title}
               </h3>
-              <p className="text-lg text-gray-700 leading-relaxed max-w-3xl font-light">
+              <p className="text-base leading-relaxed text-muted-foreground">
                 {offering.description}
               </p>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Decorative element */}
-      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-gradient-to-tl from-orange-100/30 to-transparent blur-3xl opacity-40 -z-10 pointer-events-none" />
     </section>
   )
 }

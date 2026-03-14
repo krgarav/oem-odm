@@ -12,46 +12,43 @@ export function AboutVision() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        contentRef.current,
-        { y: 80, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 50%",
-            toggleActions: "play none none none"
+      // Content animations with stagger
+      const contentElements = contentRef.current?.children
+      if (contentElements) {
+        gsap.fromTo(
+          contentElements,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 50%",
+              toggleActions: "play none none none"
+            }
           }
-        }
-      )
+        )
+      }
     }, sectionRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative min-h-[60vh] bg-gradient-to-br from-orange-100/50 via-white to-amber-50/30 py-24 lg:py-32 flex items-center overflow-hidden">
-      {/* Decorative curve background */}
-      <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-gradient-to-br from-orange-200/40 to-transparent blur-3xl -z-10 opacity-60" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-gradient-to-tl from-amber-200/30 to-transparent blur-3xl -z-10 opacity-50" />
-
-      <div className="mx-auto max-w-6xl px-4 w-full">
-        <div ref={contentRef} className="text-center">
-          <div className="inline-block mb-8">
-            <div className="relative bg-gradient-to-r from-orange-100 to-amber-100 rounded-full px-8 py-4 border-2 border-orange-200/60">
-              <h2 className="font-serif text-2xl md:text-3xl font-bold text-amber-700 leading-relaxed">
-                Glamour Unveiled:
-                <br className="hidden md:block" />
-                Your Signature Beauty Journey
-              </h2>
-            </div>
-          </div>
-
-          <p className="mt-12 font-serif text-3xl md:text-4xl font-light text-white drop-shadow-lg">
-            Where Beauty meets innovation
+    <section ref={sectionRef} className="bg-background py-20">
+      <div className="mx-auto max-w-7xl px-4">
+        <div ref={contentRef} className="max-w-4xl mx-auto">
+          <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl mb-6">
+            Our Vision
+          </h2>
+          <p className="text-lg leading-relaxed text-muted-foreground mb-8">
+            We believe beauty should be accessible to all, and every brand deserves premium quality products. At Glowgavin Overseas, we combine innovation with craftsmanship to deliver solutions that exceed expectations.
+          </p>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            Our commitment is to be your trusted partner in bringing your beauty vision to life, with uncompromising quality and exceptional service at every step.
           </p>
         </div>
       </div>
