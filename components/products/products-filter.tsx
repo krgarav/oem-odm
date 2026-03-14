@@ -21,9 +21,14 @@ const priceRanges = [
   { id: "over-100", label: "Over $100" },
 ]
 
-export function ProductsFilter() {
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedPrice, setSelectedPrice] = useState("all")
+export function ProductsFilter({
+  selectedCategory,
+  setSelectedCategory,
+  selectedPrice,
+  setSelectedPrice,
+}: any) {
+  // const [selectedCategory, setSelectedCategory] = useState("all")
+  // const [selectedPrice, setSelectedPrice] = useState("all")
 
   return (
     <div className="space-y-8">
@@ -48,7 +53,7 @@ export function ProductsFilter() {
       </div>
 
       {/* Price Range */}
-      <div>
+      {/* <div>
         <h3 className="font-serif text-lg font-bold text-foreground">Price Range</h3>
         <div className="mt-4 space-y-2">
           {priceRanges.map((range) => (
@@ -65,7 +70,7 @@ export function ProductsFilter() {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Display Notice */}
       <div className="border-t border-border pt-6">
