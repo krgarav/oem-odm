@@ -6,6 +6,11 @@ import { ProductsHero } from "@/components/products/products-hero"
 export const metadata = {
   title: "Products | OEM & ODM",
   description: "Explore our full collection of manufacturing and sourcing solutions.",
+  openGraph: {
+    title: "Products | OEM & ODM",
+    description: "Explore our manufacturing solutions",
+    type: "website",
+  },
 }
 
 export default function ProductsPage() {

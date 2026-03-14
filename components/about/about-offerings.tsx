@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
+
 gsap.registerPlugin(ScrollTrigger)
 
 export function AboutOfferings() {
@@ -49,6 +50,15 @@ export function AboutOfferings() {
       title: "COSMETICS FORMULATION",
       description: "For brands seeking truly distinctive offerings, our in-house research and development experts will craft a formula perfectly matching your requirements. From lipsticks and foundation to eyeshadow palettes and other makeup products, we'll guide you from initial idea to retail shelves."
     }
+    ,{
+      title : "CUSTOM PACKAGE",
+      description : "Gain cosmetics is a company focused on high-quality manufacturing, located in Guangzhou, China. As a professional cosmetics contract manufacturer, we have been providing OEM and ODM services for customers' private label makeup and beauty products for more than 15 years, with rich industry experience and superb technical level to meet your customized needs."
+    },
+    {
+      title : "COSMETICS CUSTOM SERVICES",
+      description : "Good qualifications mean quality products and services. authoritative R&D department has more than 15 years of experience in cosmetic contract manufacturing and can customize formulas to your specifications. In addition, we can replicate the formula based on the samples you send to meet your product specifications and requirements."
+    }
+
   ]
 
   return (

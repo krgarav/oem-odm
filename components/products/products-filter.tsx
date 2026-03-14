@@ -8,6 +8,9 @@ const categories = [
   { id: "eyes", label: "Eyes" },
   { id: "face", label: "Face" },
   { id: "skincare", label: "Skincare" },
+   { id: "eye shadow", label: "Eye Shadow" },
+   { id: "highlighter", label: "Highlighter" },
+  
 ]
 
 const priceRanges = [
