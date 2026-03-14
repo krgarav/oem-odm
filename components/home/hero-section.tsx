@@ -27,13 +27,13 @@ export function HeroSection() {
         gsap.fromTo(
           contentElements,
           { y: 60, opacity: 0 },
-          { 
-            y: 0, 
-            opacity: 1, 
-            duration: 1, 
-            stagger: 0.15, 
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.15,
             ease: "power3.out",
-            delay: 0.5 
+            delay: 0.5
           }
         )
       }
@@ -62,13 +62,30 @@ export function HeroSection() {
     <section ref={sectionRef} className="relative min-h-[90vh] overflow-hidden bg-secondary">
       {/* Background Image */}
       <div ref={imageRef} className="absolute inset-0">
-        <Image
+        {/* <Image
           src="/images/hero-makeup.jpg"
           alt="Luxury makeup collection"
           fill
           className="object-cover opacity-60"
           priority
-        />
+        /> */}
+        <div ref={imageRef} className="absolute inset-0 overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute h-full w-full object-cover"
+          >
+            <source src="/videos/girl-buying-makeup.mp4" type="video/mp4" />
+          </video>
+
+          {/* Dark overlay for readable text */}
+          <div className="absolute inset-0 bg-black/50" />
+
+          {/* Optional gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent" />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent" />
       </div>
 

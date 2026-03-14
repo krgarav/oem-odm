@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 import gsap from "gsap"
-
+import Image from "next/image";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
@@ -83,8 +83,16 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link ref={logoRef} href="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
-              <span className="font-serif text-lg font-bold text-primary-foreground">L</span>
+            {/* <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary"> */}
+               <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary">
+              {/* <span className="font-serif text-lg font-bold text-primary-foreground">L</span> */}
+              <Image
+                src="/logo_512x512.png"
+                alt="GlowGavin Logo"
+                width={40}
+                height={40}
+                className="object-cover"
+              />
             </div>
             <span className="font-serif text-2xl font-bold tracking-tight">
               OEM <span className="text-primary">&</span> ODM
