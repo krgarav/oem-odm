@@ -10,6 +10,7 @@ const categories = [
   { id: "skincare", label: "Skincare" },
    { id: "eye shadow", label: "Eye Shadow" },
    { id: "highlighter", label: "Highlighter" },
+   { id: "primer", label: "Primer" },
   
 ]
 
@@ -40,7 +41,7 @@ export function ProductsFilter({
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`block w-full text-left text-sm transition-colors ${
+              className={`block w-full text-left text-sm transition-colors cursor-pointer ${
                 selectedCategory === category.id
                   ? "font-medium text-primary"
                   : "text-muted-foreground hover:text-foreground"
