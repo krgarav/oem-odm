@@ -34,7 +34,7 @@ export function ProductsClient() {
                 </div>
               }
             >
-              <ProductsGrid category={category} price={price} />
+              <ProductsGrid category={category} />
             </Suspense>
           </div>
 
