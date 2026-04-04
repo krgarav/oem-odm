@@ -34,7 +34,11 @@ export function ProductsClient() {
                 </div>
               }
             >
+<<<<<<< HEAD
               <ProductsGrid category={category} />
+=======
+              <ProductsGrid category={category} price={price} />
+>>>>>>> 15ac20778841ea5157211a376d4948b05eb4b0f7
             </Suspense>
           </div>
 
