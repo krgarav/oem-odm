@@ -1,80 +1,78 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Eye } from "lucide-react"
 import { ProductModal } from "./product-modal"
+import uniqueProducts from "../helper/utils"
+import { useRef } from "react"
 
-const products = [
-  {
-    id: 1,
-    name: "Velvet Matte Lipstick",
-    category: "Lips",
-    image: "/images/products/matte-lipstick.jpg",
-    description: "A luxurious matte lipstick that delivers intense color payoff with a velvety smooth finish. Long-lasting formula keeps lips hydrated and comfortable all day.",
-    shades: ["Ruby Red", "Deep Maroon", "Rose Petal", "Nude Blush"],
-    colors: ["#8B0000", "#5D1A1A", "#E8B4B8", "#D4A5A5"],
-  },
-  {
-    id: 2,
-    name: "Sultry Eyes Palette",
-    category: "Eyes",
-    image: "/images/products/eyeshadow-palette.jpg",
-    description: "A stunning eyeshadow palette featuring 12 richly pigmented shades. From soft mattes to brilliant shimmers, create endless looks from day to night.",
-    shades: ["Warm Neutrals", "Deep Burgundy", "Rose Gold", "Smoky Black"],
-    colors: ["#C4A77D", "#722F37", "#B76E79", "#2C2C2C"],
-  },
-  {
-    id: 3,
-    name: "Flawless Skin Foundation",
-    category: "Face",
-    image: "/images/products/foundation.jpg",
-    description: "A buildable, medium-to-full coverage foundation that blurs imperfections and creates a naturally radiant finish. Infused with skincare ingredients for all-day comfort.",
-    shades: ["Porcelain", "Fair", "Medium", "Tan", "Deep"],
-    colors: ["#F5E6D3", "#E8D4B8", "#D4A574", "#A67B5B", "#6B4423"],
-  },
-  {
-    id: 4,
-    name: "Volumizing Mascara",
-    category: "Eyes",
-    image: "/images/products/mascara.jpg",
-    description: "An intensely volumizing mascara that creates dramatic, full lashes without clumping. Smudge-proof and long-wearing formula for all-day impact.",
-    shades: ["Jet Black", "Deep Brown"],
-    colors: ["#0A0A0A", "#3D2B1F"],
-  },
-  {
-    id: 5,
-    name: "Rose Bloom Blush",
-    category: "Face",
-    image: "/images/products/blush.jpg",
-    description: "A silky pressed blush that delivers a natural flush of color. Buildable formula allows for subtle to dramatic looks. Infused with rose extracts for skin-loving benefits.",
-    shades: ["Soft Pink", "Coral Rose", "Berry Flush", "Peach Glow"],
-    colors: ["#FFB6C1", "#E57373", "#A94064", "#FFCBA4"],
-  },
-  {
-    id: 6,
-    name: "High Shine Lip Gloss",
-    category: "Lips",
-    image: "/images/products/lipgloss.jpg",
-    description: "A non-sticky lip gloss that delivers brilliant shine and subtle color. Enriched with vitamin E and jojoba oil for soft, supple lips.",
-    shades: ["Crystal Clear", "Pink Shimmer", "Berry Burst", "Nude Glow"],
-    colors: ["#F8F8F8", "#FFB6C1", "#8B0A50", "#D4A5A5"],
-  },
-]
+
+
 
 export function ProductsGrid({ category }: { category: string }) {
-  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<typeof uniqueProducts[0] | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const gridRef = useRef<HTMLDivElement | null>(null)
+  const itemsPerPage = 6
   const filteredProducts =
     category === "all"
-      ? products
-      : products.filter(
+      ? uniqueProducts
+      : uniqueProducts.filter(
         (product) => product.category.toLowerCase() === category
       )
+
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [category])
+
+  useEffect(() => {
+    if (gridRef.current) {
+      const yOffset = -120 // adjust based on your navbar height
+      const y =
+        gridRef.current.getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset
+
+      window.scrollTo({
+        top: y,
+        behavior: "smooth",
+      })
+    }
+  }, [currentPage])
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
+
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const getVisiblePages = () => {
+    const maxVisible = 5 // how many buttons you want
+    const pages = []
+
+    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2))
+    let end = start + maxVisible - 1
+
+    if (end > totalPages) {
+      end = totalPages
+      start = Math.max(1, end - maxVisible + 1)
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i)
+    }
+
+    return pages
+  }
+
+  const visiblePages = getVisiblePages()
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      <div ref={gridRef} className="mb-6 flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Showing {filteredProducts.length} products
+          Showing {paginatedProducts.length} products
         </p>
         <select className="rounded-none border border-border bg-background px-4 py-2 text-sm focus:border-primary focus:outline-none">
           <option>Sort by: Featured</option>
@@ -85,7 +83,7 @@ export function ProductsGrid({ category }: { category: string }) {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredProducts.map((product) => (
+        {paginatedProducts.map((product) => (
           <div
             key={product.id}
             className="group cursor-pointer"
@@ -130,6 +128,60 @@ export function ProductsGrid({ category }: { category: string }) {
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-8 flex flex-wrap justify-center gap-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+          className="border px-3 py-1 text-sm disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {/* First page */}
+        {visiblePages[0] > 1 && (
+          <>
+            <button onClick={() => setCurrentPage(1)} className="border px-3 py-1 text-sm">
+              1
+            </button>
+            {visiblePages[0] > 2 && <span className="px-2">...</span>}
+          </>
+        )}
+
+        {/* Middle pages */}
+        {visiblePages.map((page) => (
+          <button
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={`px-3 py-1 text-sm border ${currentPage === page ? "bg-primary text-white" : ""
+              }`}
+          >
+            {page}
+          </button>
+        ))}
+
+        {/* Last page */}
+        {visiblePages[visiblePages.length - 1] < totalPages && (
+          <>
+            {visiblePages[visiblePages.length - 1] < totalPages - 1 && (
+              <span className="px-2">...</span>
+            )}
+            <button
+              onClick={() => setCurrentPage(totalPages)}
+              className="border px-3 py-1 text-sm"
+            >
+              {totalPages}
+            </button>
+          </>
+        )}
+
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          className="border px-3 py-1 text-sm disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
 
       {selectedProduct && (
