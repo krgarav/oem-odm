@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     await mkdir(uploadDir, { recursive: true })
 
     const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    const buffer = Buffer.from(bytes) 
     
     await writeFile(join(uploadDir, filename), buffer)
 
