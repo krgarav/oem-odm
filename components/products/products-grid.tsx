@@ -4,21 +4,48 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import { Eye } from "lucide-react"
 import { ProductModal } from "./product-modal"
-import uniqueProducts from "../helper/utils"
 import { useRef } from "react"
 
-
-
+interface Product {
+  id: number
+  name: string
+  category: string
+  image: string
+  description: string
+  shades: string[]
+  colors: string[]
+}
 
 export function ProductsGrid({ category }: { category: string }) {
-  const [selectedProduct, setSelectedProduct] = useState<typeof uniqueProducts[0] | null>(null)
+  const [products, setProducts] = useState<Product[]>([])
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [loading, setLoading] = useState(true)
   const gridRef = useRef<HTMLDivElement | null>(null)
   const itemsPerPage = 6
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products')
+        const data = await response.json()
+        if (data.success) {
+          setProducts(data.products)
+        }
+      } catch (error) {
+        console.error('[v0] Failed to fetch products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
   const filteredProducts =
     category === "all"
-      ? uniqueProducts
-      : uniqueProducts.filter(
+      ? products
+      : products.filter(
         (product) => product.category.toLowerCase() === category
       )
 
@@ -68,11 +95,31 @@ export function ProductsGrid({ category }: { category: string }) {
   }
 
   const visiblePages = getVisiblePages()
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading products...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-muted-foreground">No products found.</p>
+      </div>
+    )
+  }
+
   return (
     <>
       <div ref={gridRef} className="mb-6 flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Showing {paginatedProducts.length} products
+          Showing {paginatedProducts.length} of {filteredProducts.length} products
         </p>
         <select className="rounded-none border border-border bg-background px-4 py-2 text-sm focus:border-primary focus:outline-none">
           <option>Sort by: Featured</option>

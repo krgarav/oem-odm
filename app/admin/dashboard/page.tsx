@@ -25,15 +25,24 @@ export default function AdminDashboard() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/products')
-        if (response.status === 401) {
+        // Check authentication
+        const authResponse = await fetch('/api/auth/check', {
+          credentials: 'include'
+        })
+        
+        if (authResponse.status === 401) {
           router.push('/admin/login')
-        } else if (response.ok) {
-          const data = await response.json()
+          return
+        }
+
+        // Fetch products
+        const productsResponse = await fetch('/api/products')
+        if (productsResponse.ok) {
+          const data = await productsResponse.json()
           setProducts(data.products)
         }
       } catch (error) {
-        console.error('Auth check failed:', error)
+        console.error('[v0] Auth check failed:', error)
         router.push('/admin/login')
       } finally {
         setLoading(false)
@@ -55,9 +64,16 @@ export default function AdminDashboard() {
   const handleProductAdded = () => {
     setShowForm(false)
     // Refresh products list
-    fetch('/api/products')
+    fetch('/api/products', {
+      credentials: 'include'
+    })
       .then(res => res.json())
-      .then(data => setProducts(data.products))
+      .then(data => {
+        if (data.success) {
+          setProducts(data.products)
+        }
+      })
+      .catch(err => console.error('[v0] Failed to refresh products:', err))
   }
 
   if (loading) {

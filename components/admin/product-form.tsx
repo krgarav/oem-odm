@@ -47,7 +47,8 @@ export function ProductForm({ onSuccess }: ProductFormProps) {
 
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formDataObj
+        body: formDataObj,
+        credentials: 'include'
       })
 
       const data = await response.json()
@@ -122,6 +123,7 @@ export function ProductForm({ onSuccess }: ProductFormProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           ...formData,
           image: imageUrl,

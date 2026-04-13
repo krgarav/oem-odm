@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
+import uniqueProducts from '@/components/helper/utils'
 
 // In-memory product storage (in production, use a database)
 let products: any[] = []
 
 // Initialize with seed data on first run
 let isInitialized = false
+
+function initializeProducts() {
+  if (!isInitialized) {
+    products = JSON.parse(JSON.stringify(uniqueProducts))
+    isInitialized = true
+  }
+}
 
 function verifySessionFromRequest(request: NextRequest): boolean {
   const sessionToken = request.cookies.get('admin_session')
@@ -13,14 +21,8 @@ function verifySessionFromRequest(request: NextRequest): boolean {
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin session
-    const isAdmin = verifySessionFromRequest(request)
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    // Initialize products on first request
+    initializeProducts()
 
     return NextResponse.json(
       { success: true, products },
@@ -45,6 +47,9 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       )
     }
+
+    // Initialize products on first request
+    initializeProducts()
 
     const body = await request.json()
     const { name, category, description, image, shades, colors } = body
