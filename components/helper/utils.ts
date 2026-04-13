@@ -1,3 +1,5 @@
+import { uploadProductsFromLocal } from "@/app/admin/utils";
+
 const products = [
   // LIPS - 25 Products
   {
