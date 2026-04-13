@@ -6,11 +6,12 @@ import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 import gsap from "gsap"
 import Image from "next/image";
-const navLinks = [
+const navLinks: Array<{ href: string; label: string; isAdmin?: boolean }> = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/products", label: "Products" },
   { href: "/contact", label: "Contact" },
+  { href: "/admin/login", label: "Admin", isAdmin: true },
 ]
 
 export function Header() {
@@ -106,7 +107,9 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm uppercase tracking-widest transition-colors hover:text-primary"
+                className={`text-sm uppercase tracking-widest transition-colors hover:text-primary ${
+                  link.isAdmin ? 'ml-4 text-xs font-semibold px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800 hover:text-white' : ''
+                }`}
               >
                 {link.label}
               </Link>
@@ -136,7 +139,9 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-sm uppercase tracking-widest transition-colors hover:text-primary"
+                  className={`text-sm uppercase tracking-widest transition-colors hover:text-primary ${
+                    link.isAdmin ? 'text-xs font-semibold px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800 hover:text-white inline-block w-fit' : ''
+                  }`}
                 >
                   {link.label}
                 </Link>
