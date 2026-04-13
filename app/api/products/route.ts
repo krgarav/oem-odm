@@ -85,3 +85,105 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    // Verify admin session
+    const isAdmin = verifySessionFromRequest(request)
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // Initialize products on first request
+    initializeProducts()
+
+    const body = await request.json()
+    const { id, name, category, description, image, shades, colors } = body
+
+    if (!id || !name || !category || !description || !image) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    const productIndex = products.findIndex((p: any) => p.id === id)
+    if (productIndex === -1) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      )
+    }
+
+    products[productIndex] = {
+      id,
+      name,
+      category,
+      description,
+      image,
+      shades: shades || [],
+      colors: colors || []
+    }
+
+    return NextResponse.json(
+      { success: true, product: products[productIndex] },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('Update product error:', error)
+    return NextResponse.json(
+      { error: 'Failed to update product' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    // Verify admin session
+    const isAdmin = verifySessionFromRequest(request)
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // Initialize products on first request
+    initializeProducts()
+
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Product ID is required' },
+        { status: 400 }
+      )
+    }
+
+    const productIndex = products.findIndex((p: any) => p.id === parseInt(id))
+    if (productIndex === -1) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      )
+    }
+
+    const deletedProduct = products.splice(productIndex, 1)[0]
+
+    return NextResponse.json(
+      { success: true, product: deletedProduct },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('Delete product error:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete product' },
+      { status: 500 }
+    )
+  }
+}

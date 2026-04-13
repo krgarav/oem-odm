@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { LogOut, Plus } from 'lucide-react'
+import { LogOut, Plus, Edit2, Trash2 } from 'lucide-react'
 import { ProductForm } from '@/components/admin/product-form'
+import { EditProductModal } from '@/components/admin/edit-product-modal'
 
 interface Product {
   id: number
@@ -21,6 +22,8 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -63,7 +66,10 @@ export default function AdminDashboard() {
 
   const handleProductAdded = () => {
     setShowForm(false)
-    // Refresh products list
+    refreshProducts()
+  }
+
+  const refreshProducts = () => {
     fetch('/api/products', {
       credentials: 'include'
     })
@@ -74,6 +80,36 @@ export default function AdminDashboard() {
         }
       })
       .catch(err => console.error('[v0] Failed to refresh products:', err))
+  }
+
+  const handleDeleteProduct = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this product?')) {
+      return
+    }
+
+    setDeletingId(id)
+    try {
+      const response = await fetch(`/api/products?id=${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+
+      if (response.ok) {
+        setProducts(products.filter(p => p.id !== id))
+      } else {
+        alert('Failed to delete product')
+      }
+    } catch (error) {
+      console.error('[v0] Delete error:', error)
+      alert('Error deleting product')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  const handleEditSuccess = () => {
+    setEditingProduct(null)
+    refreshProducts()
   }
 
   if (loading) {
@@ -188,7 +224,24 @@ export default function AdminDashboard() {
                       </div>
                     )}
                     <div className="pt-3 border-t border-slate-200">
-                      <p className="text-xs text-slate-500">ID: {product.id}</p>
+                      <p className="text-xs text-slate-500 mb-3">ID: {product.id}</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setEditingProduct(product)}
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-sm font-medium transition"
+                        >
+                          <Edit2 size={16} />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(product.id)}
+                          disabled={deletingId === product.id}
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-700 rounded text-sm font-medium transition"
+                        >
+                          <Trash2 size={16} />
+                          {deletingId === product.id ? 'Deleting...' : 'Delete'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -196,6 +249,15 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
+
+        {/* Edit Modal */}
+        {editingProduct && (
+          <EditProductModal
+            product={editingProduct}
+            onClose={() => setEditingProduct(null)}
+            onSuccess={handleEditSuccess}
+          />
+        )}
       </main>
     </div>
   )
