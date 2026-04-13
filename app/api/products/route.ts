@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminSession } from '@/lib/auth'
 
 // In-memory product storage (in production, use a database)
 let products: any[] = []
@@ -7,10 +6,15 @@ let products: any[] = []
 // Initialize with seed data on first run
 let isInitialized = false
 
+function verifySessionFromRequest(request: NextRequest): boolean {
+  const sessionToken = request.cookies.get('admin_session')
+  return !!sessionToken
+}
+
 export async function GET(request: NextRequest) {
   try {
     // Verify admin session
-    const isAdmin = await verifyAdminSession()
+    const isAdmin = verifySessionFromRequest(request)
     if (!isAdmin) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -34,7 +38,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Verify admin session
-    const isAdmin = await verifyAdminSession()
+    const isAdmin = verifySessionFromRequest(request)
     if (!isAdmin) {
       return NextResponse.json(
         { error: 'Unauthorized' },

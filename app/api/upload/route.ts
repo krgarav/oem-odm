@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
-import { verifyAdminSession } from '@/lib/auth'
+
+function verifySessionFromRequest(request: NextRequest): boolean {
+  const sessionToken = request.cookies.get('admin_session')
+  return !!sessionToken
+}
 
 export async function POST(request: NextRequest) {
   try {
     // Verify admin session
-    const isAdmin = await verifyAdminSession()
+    const isAdmin = verifySessionFromRequest(request)
     if (!isAdmin) {
       return NextResponse.json(
         { error: 'Unauthorized' },

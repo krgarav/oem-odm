@@ -23,6 +23,7 @@ export default function AdminLogin() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
+        credentials: 'include', // Important: include credentials to set cookies
       })
 
       const data = await response.json()
@@ -33,9 +34,12 @@ export default function AdminLogin() {
         return
       }
 
-      // Redirect to dashboard on successful login
-      router.push('/admin/dashboard')
+      // Small delay to ensure cookie is set before redirect
+      setTimeout(() => {
+        router.push('/admin/dashboard')
+      }, 500)
     } catch (err) {
+      console.error('[v0] Login error:', err)
       setError('An error occurred. Please try again.')
       setLoading(false)
     }

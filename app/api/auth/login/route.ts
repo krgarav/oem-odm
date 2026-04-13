@@ -22,12 +22,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    await createAdminSession()
-
-    return NextResponse.json(
+    const response = NextResponse.json(
       { success: true, message: 'Login successful' },
       { status: 200 }
     )
+
+    // Set the session cookie on the response
+    const sessionToken = Buffer.from(Date.now().toString()).toString('base64')
+    response.cookies.set({
+      name: 'admin_session',
+      value: sessionToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24, // 24 hours
+      path: '/'
+    })
+
+    return response
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(
