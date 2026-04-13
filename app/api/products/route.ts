@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     const product = await Product.create({
-      name,
+      name, 
       category,
       description,
       image,

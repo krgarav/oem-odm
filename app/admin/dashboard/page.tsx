@@ -8,7 +8,7 @@ import { ProductForm } from '@/components/admin/product-form'
 import { EditProductModal } from '@/components/admin/edit-product-modal'
 
 interface Product {
-  id: number
+  _id: number
   name: string
   category: string
   description: string
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
       })
 
       if (response.ok) {
-        setProducts(products.filter(p => p.id !== id))
+        setProducts(products.filter(p => p._id !== id))
       } else {
         alert('Failed to delete product')
       }
@@ -184,7 +184,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map(product => (
                 <div
-                  key={product.id}
+                  key={product._id}
                   className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:shadow-lg transition"
                 >
                   <div className="relative w-full h-48 bg-slate-100">
@@ -234,12 +234,12 @@ export default function AdminDashboard() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          disabled={deletingId === product.id}
+                          onClick={() => handleDeleteProduct(product._id)}
+                          disabled={deletingId === product._id}
                           className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-700 rounded text-sm font-medium transition"
                         >
                           <Trash2 size={16} />
-                          {deletingId === product.id ? 'Deleting...' : 'Delete'}
+                          {deletingId === product._id ? 'Deleting...' : 'Delete'}
                         </button>
                       </div>
                     </div>
