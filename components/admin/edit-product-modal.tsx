@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { X } from 'lucide-react'
 
 interface Product {
-  id: number
+  _id: number
   name: string
   category: string
   description: string
@@ -100,7 +100,7 @@ export function EditProductModal({ product, onClose, onSuccess }: EditProductMod
         },
         credentials: 'include',
         body: JSON.stringify({
-          id: product.id,
+          id: product._id,
           ...formData,
           image,
           shades: shades.filter(s => s.trim()),
