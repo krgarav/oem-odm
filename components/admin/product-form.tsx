@@ -33,11 +33,16 @@ export function ProductForm({ onSuccess }: ProductFormProps) {
     shades: [''],
     colors: ['']
   })
-
+  const MAX_SIZE = 5 * 1024 * 1024 // 5MB 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
+    if (file.size > MAX_SIZE) {
+    setError('File size must be 5MB or less')
+    return
+    }
+    
     setUploading(true)
     setError('')
 
